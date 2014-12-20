@@ -25,11 +25,6 @@ Bottle Jade -- Short description.
     :target: https://www.gratipay.com/klen/
     :alt: Donate
 
-.. _documentation:
-
-**Docs are available at https://bottle-jade.readthedocs.org/. Pull requests
-with documentation enhancements and/or fixes are awesome and most welcome.**
-
 .. _contents:
 
 .. contents::
@@ -54,6 +49,35 @@ Installation
 
 Usage
 =====
+::
+
+    from bottle import Bottle
+    from bottle_jade import JadePlugin
+    from os import path as op
+
+    app = Bottle()
+    templates = op.dirname(op.abspath(__file__))
+    jade = app.install(JadePlugin(template_folder=templates))
+
+    @app.route('/')
+    def index():
+        context = {'var': 'value'}
+        return jade.render('index.jade', **context)
+
+    @app.route('/simple')
+    @jade.view('simple.jade')
+    def simple():
+        context = {}
+        return context
+
+
+Configuration
+-------------
+
+JADE_CACHE_SIZE -- Number of templates which will be cached (200)
+JADE_PRETTY -- Enable pretty output (True)
+JADE_TEMPLATE_FOLDER -- Set path to templates folder (templates)
+JADE_ENCODING -- Set templates' encoding (UTF-8)
 
 .. _bugtracker:
 
