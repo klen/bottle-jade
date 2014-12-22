@@ -122,7 +122,7 @@ class Environment(object):
         if path not in self.cache_index:
             self.cache_index.append(path)
         self.cache[path] = compiler
-        if self.cache_index > self.options['cache_size']:
+        if len(self.cache_index) > self.options['cache_size']:
             self.cache.pop(self.cache_index.pop(0))
         return compiler
 
