@@ -78,7 +78,14 @@ class JadePlugin(object):
     def apply(callback, route):
         return callback
 
+    @property
+    def context(self):
+        from bottle import app, request
+        return {'app': app, 'request': request, 'env': self}
+
     def render(self, path, **context):
+        ctx = dict(self.context)
+        ctx.update(context)
         template = self.env.get_template(path)
         return self.env.render(template, **context)
 
