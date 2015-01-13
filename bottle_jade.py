@@ -35,6 +35,10 @@ class ExtendCompiler(Compiler):
         for node in block.nodes:
             self.visitNode(node)
 
+    def visitInclude(self, node):
+        compiler = self.env.get_template(node.path)
+        self.visit(compiler.node)
+
 
 class JadePlugin(object):
 
