@@ -5,7 +5,7 @@ from pyjade.nodes import Extends, CodeBlock
 from os import path as op
 
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __project__ = "bottle-jade"
 __author__ = "Kirill Klenov <horneds@gmail.com>"
 __license__ = "MIT"
