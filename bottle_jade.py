@@ -40,6 +40,11 @@ class ExtendCompiler(Compiler):
         self.visit(compiler.node)
 
 
+def bottle_provider():
+    from bottle import app, request
+    return {'app': app[0], 'request': request}
+
+
 class JadePlugin(object):
 
     """ The class is used to control the pyjade integration to Flask application. """
@@ -57,6 +62,7 @@ class JadePlugin(object):
         self.app = None
         self.env = Environment()
         self.defaults.update(options)
+        self.providers = [bottle_provider]
 
     def setup(self, app):
         self.app = app
@@ -78,16 +84,24 @@ class JadePlugin(object):
     def apply(callback, route):
         return callback
 
-    @property
-    def context(self):
-        from bottle import app, request
-        return {'app': app, 'request': request, 'env': self}
+    def ctx_provider(self, func):
+        """ Decorator for adding a context provider.
+
+        ::
+            @jade.ctx_provider
+            def my_context():
+                return {...}
+        """
+        self.providers.append(func)
+        return func
 
     def render(self, path, **context):
-        ctx = dict(self.context)
+        ctx = dict()
+        for provider in self.providers:
+            ctx.update(provider())
         ctx.update(context)
         template = self.env.get_template(path)
-        return self.env.render(template, **context)
+        return self.env.render(template, **ctx)
 
     def view(self, template):
         def decorator(callback):

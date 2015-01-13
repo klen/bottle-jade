@@ -13,7 +13,7 @@ def test_bottle_jade():
 
     @app.route('/')
     def index():
-        context = {'var': 'value'}
+        context = {'variable': 'value'}
         return jade.render('index.jade', **context)
 
     @app.route('/simple')
@@ -25,6 +25,7 @@ def test_bottle_jade():
     client = webtest.TestApp(app)
     response = client.get('/')
     assert b'Hello world' in response.body
+    assert b'localhost' in response.body
 
     response = client.get('/simple')
     assert b'Simple' in response.body
