@@ -40,11 +40,6 @@ class ExtendCompiler(Compiler):
         self.visit(compiler.node)
 
 
-def bottle_provider():
-    from bottle import app, request
-    return {'app': app[0], 'request': request}
-
-
 class JadePlugin(object):
 
     """ The class is used to control the pyjade integration to Flask application. """
@@ -59,10 +54,11 @@ class JadePlugin(object):
     )
 
     def __init__(self, **options):
+        from bottle import request
         self.app = None
         self.env = Environment()
         self.defaults.update(options)
-        self.providers = [bottle_provider]
+        self.providers = [lambda: {'app': self.app, 'request': request}]
 
     def setup(self, app):
         self.app = app
